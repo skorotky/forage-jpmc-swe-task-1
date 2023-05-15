@@ -11,30 +11,33 @@ class ClientTest(unittest.TestCase):
              'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
         ]
         """ ------------ Add the assertion below ------------ """
-        test_quote = quotes[0]
-        test_data_point = getDataPoint(test_quote)
-        actual_price = test_data_point[3]
+        for quote in quotes:
+            expected_stock = quote["stock"]
+            expected_bid_price = float(quote['top_bid']['price'])
+            expected_ask_price = float(quote['top_ask']['price'])
+            expected_price = (expected_bid_price + expected_ask_price) / 2
+            expected_data_point = (expected_stock, expected_bid_price, expected_ask_price, expected_price)
+            actual_data_point = getDataPoint(quote)
 
-        bid_price = float(test_quote['top_bid']['price'])
-        ask_price = float(test_quote['top_ask']['price'])
-        expected_price = (bid_price + ask_price) / 2
-
-        self.assertEqual(actual_price, expected_price)
+            self.assertEqual(actual_data_point, expected_data_point)
 
     def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
         quotes = [
             {'top_ask': {'price': 119.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453',
              'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
-            {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453',
+            {'top_ask': {'price': 110.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453',
              'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
         ]
         """ ------------ Add the assertion below ------------ """
-        bid_greater_than_ask_quote = quotes[0]
-        test_data_point = getDataPoint(bid_greater_than_ask_quote)
-        test_ask_price = test_data_point[2]
-        actual_price = test_data_point[3]
+        for quote in quotes:
+            expected_stock = quote["stock"]
+            expected_bid_price = float(quote['top_bid']['price'])
+            expected_ask_price = float(quote['top_ask']['price'])
+            expected_price = (expected_bid_price + expected_ask_price) / 2
+            expected_data_point = (expected_stock, expected_bid_price, expected_ask_price, expected_price)
+            actual_data_point = getDataPoint(quote)
 
-        self.assertTrue(actual_price > test_ask_price)
+            self.assertEqual(actual_data_point, expected_data_point)
 
     """ ------------ Add more unit tests ------------ """
 
